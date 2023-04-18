@@ -1,60 +1,59 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "hconcat": [
-    {
-      "title": {"text": "BigFoot Reports Frequency by State", "dy": 150},
-      "width": 600,
-      "height": 700,
-      "params": [
-        {
-          "name": "highlight",
-          "select": {"type": "point", "fields": ["state"], "toggle": false}
-        }
-      ],
-      "data": {
-        "url": "https://raw.githubusercontent.com/UIUC-iSchool-DataViz/is445_bcubcg_fall2022/main/data/bfro_reports_fall2022.csv"
-      },
-      "transform": [
-        {"aggregate": [{"op": "count", "as": "count"}], "groupby": ["state"]},
-        {
-          "calculate": "datum.state == 'Alabama' ? 1 : datum.state == 'Alaska' ? 2 : datum.state == 'Arizona' ? 4 : datum.state == 'Arkansas' ? 5 : datum.state == 'California' ? 6 : datum.state == 'Colorado' ? 8 : datum.state == 'Connecticut' ? 9 : datum.state == 'Delaware' ? 10 : datum.state == 'Florida' ? 12 : datum.state == 'Georgia' ? 13 : datum.state == 'Hawaii' ? 15 : datum.state == 'Idaho' ? 16 : datum.state == 'Illinois' ? 17 : datum.state == 'Indiana' ? 18 : datum.state == 'Iowa' ? 19 : datum.state == 'Kansas' ? 20 : datum.state == 'Kentucky' ? 21 : datum.state == 'Louisiana' ? 22 : datum.state == 'Maine' ? 23 : datum.state == 'Maryland' ? 24 : datum.state == 'Massachusetts' ? 25 : datum.state == 'Michigan' ? 26 : datum.state == 'Minnesota' ? 27 : datum.state == 'Mississippi' ? 28 : datum.state == 'Missouri' ? 29 : datum.state == 'Montana' ? 30 : datum.state == 'Nebraska' ? 31 : datum.state == 'Nevada' ? 32 : datum.state == 'New Hampshire' ? 33 : datum.state == 'New Jersey' ? 34 : datum.state == 'New Mexico' ? 35 : datum.state == 'New York' ? 36 : datum.state == 'North Carolina' ? 37 : datum.state == 'North Dakota' ? 38 : datum.state == 'Ohio' ? 39 : datum.state == 'Oklahoma' ? 40 : datum.state == 'Oregon' ? 41 : datum.state == 'Pennsylvania' ? 42 : datum.state == 'Rhode Island' ? 44 : datum.state == 'South Carolina' ? 45 : datum.state == 'South Dakota' ? 46 : datum.state == 'Tennessee' ? 47 : datum.state == 'Texas' ? 48 : datum.state == 'Utah' ? 49 : datum.state == 'Vermont' ? 50 : datum.state == 'Virginia' ? 51 : datum.state == 'Washington' ? 53 : datum.state == 'West Virginia' ? 54 : datum.state == 'Wisconsin' ? 55 : datum.state == 'Wyoming' ? 56 : 0",
-          "as": "id"
-        },
-        {
-          "lookup": "id",
-          "from": {
-            "data": {
-              "url": "https://raw.githubusercontent.com/vega/vega-lite-v1/master/data/us-10m.json",
-              "format": {"type": "topojson", "feature": "states"}
-            },
-            "key": "id"
-          },
-          "as": "geo"
-        },
-        {"calculate": "datum.state", "as": "_vgsid_"}
-      ],
-      "mark": "geoshape",
-      "projection": {"type": "albersUsa"},
-      "encoding": {
-        "shape": {"field": "geo", "type": "geojson"},
-        "color": {
-          "field": "count",
-          "type": "quantitative",
-          "legend": {"orient": "left"}
-        }
+  "data": {
+    "url": "https://raw.githubusercontent.com/UIUC-iSchool-DataViz/is445_bcubcg_fall2022/main/data/bfro_reports_fall2022.csv"
+  },
+  "repeat": {
+    "row": [
+      "dew_point",
+      "humidity",
+      "cloud_cover",
+      "precip_intensity",
+      "precip_probability",
+      "pressure",
+      "uv_index",
+      "visibility",
+      "wind_bearing",
+      "wind_speed"
+    ],
+    "column": [
+      "dew_point",
+      "humidity",
+      "cloud_cover",
+      "precip_intensity",
+      "precip_probability",
+      "pressure",
+      "uv_index",
+      "visibility",
+      "wind_bearing",
+      "wind_speed"
+    ]
+  },
+  "spec": {
+    "selection": {
+      "brush": {
+        "type": "interval",
+        "resolve": "global",
+        "on": "[mousedown, window:mouseup] > window:mousemove!",
+        "encodings": ["x", "y"],
+        "translate": "[mousedown, window:mouseup] > window:mousemove!",
+        "zoom": "wheel!",
+        "mark": { "fill": "#333", "fillOpacity": 0.125, "stroke": "white" }
       }
     },
-    {
-      "title": {"text": "State's BigFoot Reports Frequency by Season"},
-      "width": 400,
-      "height": 500,
-      "data": {
-        "url": "https://raw.githubusercontent.com/UIUC-iSchool-DataViz/is445_bcubcg_fall2022/main/data/bfro_reports_fall2022.csv"
-      },
-      "transform": [{"filter": "datum.state == highlight.state"}],
-      "mark": "bar",
-      "encoding": {"x": {"field": "season"}, "y": {"aggregate": "count"}}
+    "mark": "point",
+    "encoding": {
+      "x": { "field": { "repeat": "column" }, "type": "quantitative" },
+      "y": { "field": { "repeat": "row" }, "type": "quantitative" },
+      "color": {
+        "condition": {
+          "selection": "brush",
+          "field": "classification",
+          "type": "nominal"
+        },
+        "value": "grey"
+      }
     }
-  ],
+  },
   "config": {}
 }
