@@ -91,7 +91,7 @@ Resource(s) Used:
   - Original: https://raw.githubusercontent.com/vega/vega-lite-v1/master/data/data/us-10m.json
 
 <div class="left">
-{% include elements/button.html link="https://github.com/UIUC-iSchool-DataViz/is445_bcubcg_fall2022/blob/main/data/bfro_reports_fall2022.csv" text="The Data" %}
+{% include elements/button.html link="https://github.com/duanegroves/is445" text="The Data" %}
 </div>
 
 <div class="right">
