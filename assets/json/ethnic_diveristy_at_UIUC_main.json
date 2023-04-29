@@ -1,0 +1,138 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "hconcat": [
+    {
+      "title": {
+        "text": "UIUC International Demographics by Country",
+        "dy": 150
+      },
+      "width": 600,
+      "height": 700,
+      "layer": [
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/vega/vega-lite-v1/master/data/data/world-110m.json",
+            "format": {"type": "topojson", "feature": "countries"}
+          },
+          "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"}
+        },
+        {
+          "params": [
+            {
+              "name": "highlight",
+              "select": {
+                "type": "point",
+                "fields": ["COUNTRY"],
+                "toggle": false
+              }
+            }
+          ],
+          "data": {
+            "url": "https://raw.githubusercontent.com/duanegroves/is445/main/countrysp23.csv"
+          },
+          "transform": [
+            {"calculate": "trim(datum.COUNTRY)", "as": "COUNTRY"},
+            {
+              "calculate": "datum.COUNTRY == 'Bolivia' ? 'Bolivia, Plurinational State of' : datum.COUNTRY == 'Bosnia and Herzegovi' ? 'Bosnia and Herzegovina' : datum.COUNTRY == 'Congo (Kinshasa)' ? 'Congo, the Democratic Republic of the' : datum.COUNTRY == 'Eswatini (Swaziland)' ? 'Swaziland' :  datum.COUNTRY == 'Iran' ? 'Iran, Islamic Republic of' :  datum.COUNTRY == 'Russia' ? 'Russian Federation' :  datum.COUNTRY == 'South Korea' ? 'Korea, Republic of' :  datum.COUNTRY == 'Syria' ? 'Syrian Arab Republic' :  datum.COUNTRY == 'Taiwan' ? 'Taiwan, Province of China' :  datum.COUNTRY == 'Tanzania' ? 'Tanzania, United Republic of' : datum.COUNTRY == 'Venezuela' ? 'Venezuela, Bolivarian Republic of' : datum.COUNTRY == 'Vietnam' ? 'Viet Nam' : datum.COUNTRY == 'Tanzania' ? 'Tanzania, United Republic of' : datum.COUNTRY",
+              "as": "COUNTRY"
+            },
+            {
+              "lookup": "COUNTRY",
+              "from": {
+                "data": {
+                  "url": "https://raw.githubusercontent.com/alisle/world-110m-country-codes/master/world-110m-country-codes.json"
+                },
+                "key": "name",
+                "fields": ["id"]
+              }
+            },
+            {
+              "lookup": "id",
+              "from": {
+                "data": {
+                  "url": "https://raw.githubusercontent.com/vega/vega-lite-v1/master/data/data/world-110m.json",
+                  "format": {"type": "topojson", "feature": "countries"}
+                },
+                "key": "id"
+              },
+              "as": "geo"
+            }
+          ],
+          "mark": {"type": "geoshape", "stroke": "white"},
+          "projection": {"type": "equirectangular"},
+          "encoding": {
+            "shape": {"field": "geo", "type": "geojson"},
+            "color": {
+              "field": "ALL",
+              "type": "quantitative",
+              "scale": {"type": "log", "scheme": "greens"},
+              "legend": {
+                "title": "Total Number Represented",
+                "orient": "none",
+                "direction": "horizontal",
+                "legendX": 125,
+                "legendY": 525,
+                "gradientLength": {"expr": "400"}
+              }
+            },
+            "tooltip": [
+              {"field": "COUNTRY", "type": "ordinal", "title": "Country"},
+              {
+                "field": "ALL",
+                "type": "quantitative",
+                "title": "Total Representation"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": {
+        "text": {
+          "expr": "join(['UIUC Demographic Make-Up of ', highlight.COUNTRY])"
+        }
+      },
+      "width": 400,
+      "height": 500,
+      "data": {
+        "url": "https://raw.githubusercontent.com/duanegroves/is445/main/countrysp23.csv"
+      },
+      "transform": [
+        {"calculate": "trim(datum.COUNTRY)", "as": "COUNTRY"},
+        {
+          "calculate": "datum.COUNTRY == 'Bolivia' ? 'Bolivia, Plurinational State of' : datum.COUNTRY == 'Bosnia and Herzegovi' ? 'Bosnia and Herzegovina' : datum.COUNTRY == 'Congo (Kinshasa)' ? 'Congo, the Democratic Republic of the' : datum.COUNTRY == 'Eswatini (Swaziland)' ? 'Swaziland' :  datum.COUNTRY == 'Iran' ? 'Iran, Islamic Republic of' :  datum.COUNTRY == 'Russia' ? 'Russian Federation' :  datum.COUNTRY == 'South Korea' ? 'Korea, Republic of' :  datum.COUNTRY == 'Syria' ? 'Syrian Arab Republic' :  datum.COUNTRY == 'Taiwan' ? 'Taiwan, Province of China' :  datum.COUNTRY == 'Tanzania' ? 'Tanzania, United Republic of' : datum.COUNTRY == 'Venezuela' ? 'Venezuela, Bolivarian Republic of' : datum.COUNTRY == 'Vietnam' ? 'Viet Nam' : datum.COUNTRY == 'Tanzania' ? 'Tanzania, United Republic of' : datum.COUNTRY",
+          "as": "COUNTRY"
+        },
+        {"filter": "datum.COUNTRY == highlight.COUNTRY"},
+        {
+          "fold": [
+            "UNDERGRADUATE: F",
+            "UNDERGRADUATE: M",
+            "UNDERGRADUATE: UNK",
+            "GRADUATE: F",
+            "GRADUATE: M",
+            "GRADUATE: UNK",
+            "PROFESSIONAL: F",
+            "PROFESSIONAL: M",
+            "PROFESSIONAL: UNK"
+          ]
+        }
+      ],
+      "mark": "bar",
+      "encoding": {
+        "x": {
+          "title": "Student Level and Sex",
+          "field": "key",
+          "type": "nominal"
+        },
+        "y": {
+          "title": "Number of Individuals",
+          "field": "value",
+          "type": "quantitative"
+        }
+      }
+    }
+  ],
+  "config": {}
+}

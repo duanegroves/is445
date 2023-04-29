@@ -1,0 +1,74 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "title": {"text": "UIUC International Demographics by Country", "dy": 150},
+  "width": 600,
+  "height": 700,
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/vega/vega-lite-v1/master/data/data/us-10m.json",
+        "format": {"type": "topojson", "feature": "counties"}
+      },
+      "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "white"}
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/duanegroves/is445/main/zipcds.fa22.csv"
+      },
+      "transform": [
+        {
+          "lookup": "Zip Code",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/duanegroves/is445/main/ZIP-COUNTY-FIPS_2017-06.csv"
+            },
+            "key": "ZIP",
+            "fields": ["COUNTYNAME", "STATE", "STCOUNTYFP"]
+          }
+        },
+        {
+          "aggregate": [{"op": "sum", "field": "Count", "as": "Count"}],
+          "groupby": ["STCOUNTYFP", "COUNTYNAME"]
+        },
+        {
+          "lookup": "STCOUNTYFP",
+          "from": {
+            "data": {
+              "url": "https://raw.githubusercontent.com/vega/vega-lite-v1/master/data/data/us-10m.json",
+              "format": {"type": "topojson", "feature": "counties"}
+            },
+            "key": "id"
+          },
+          "as": "geo"
+        }
+      ],
+      "mark": {"type": "geoshape", "stroke": "white"},
+      "projection": {"type": "albersUsa"},
+      "encoding": {
+        "shape": {"field": "geo", "type": "geojson"},
+        "color": {
+          "field": "Count",
+          "type": "quantitative",
+          "scale": {"type": "log", "scheme": "greens"},
+          "legend": {
+            "title": "Total Number Represented",
+            "orient": "none",
+            "direction": "horizontal",
+            "legendX": 125,
+            "legendY": 525,
+            "gradientLength": {"expr": "400"}
+          }
+        },
+        "tooltip": [
+          {"field": "COUNTYNAME", "type": "ordinal", "title": "County"},
+          {
+            "field": "Count",
+            "type": "quantitative",
+            "title": "Total Representation"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {}
+}
