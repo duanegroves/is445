@@ -67,7 +67,6 @@ Something that I personally noticed through this investigation of comparing the 
 Resource(s) Used:
 
 - Institute of Internal Education. (n.d). Number of international students studying in the United States in 2021/22, by country of origin. In Statista - The Statistics Portal. Retrieved Apr 25, 2023, from https://www.statista.com/statistics/233880/international-students-in-the-us-by-country-of-origin/.
--
 
 #### Domestic Students by County - Fall 2022
 
