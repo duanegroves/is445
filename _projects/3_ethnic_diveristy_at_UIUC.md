@@ -90,7 +90,7 @@ Resource(s) Used:
   - Original: https://raw.githubusercontent.com/vega/vega-lite-v1/master/data/data/us-10m.json
 
 <div class="left">
-{% include elements/button.html link="https://github.com/duanegroves/is445/copy_of_datasets_used" text="The Data" %}
+{% include elements/button.html link="https://github.com/duanegroves/is445/tree/main/copy_of_datasets_used" text="The Data" %}
 </div>
 
 <div class="right">
